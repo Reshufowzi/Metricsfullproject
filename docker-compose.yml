@@ -1,28 +1,17 @@
-version: '3.8'
-
 services:
   mongo-api:
-    build: ./metricmongo
-    container_name: mongo-api
+    image: reshma0209/mongo-api:8
     ports:
       - "5000:5000"
     environment:
       - MONGODB_URI=${MONGODB_URI}
-    restart: always
 
   mysql-api:
-    build: ./metricmysql
-    container_name: mysql-api
+    image: reshma0209/mysql-api:8
     ports:
       - "6000:6000"
-    restart: always
 
   frontend:
-    build: ./metricclient
-    container_name: frontend
+    image: reshma0209/frontend:8
     ports:
       - "80:80"
-    depends_on:
-      - mongo-api
-      - mysql-api
-    restart: always
