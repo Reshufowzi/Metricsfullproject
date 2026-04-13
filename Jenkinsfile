@@ -31,6 +31,8 @@ pipeline {
                     docker push $DOCKERHUB/mongo-api:$IMAGE_TAG
                     docker push $DOCKERHUB/mysql-api:$IMAGE_TAG
                     docker push $DOCKERHUB/frontend:$IMAGE_TAG
+
+                    docker logout
                     '''
                 }
             }
@@ -38,14 +40,13 @@ pipeline {
 
         stage('Deploy Application') {
             steps {
-                withCredentials([string(credentialsId: 'mongo-uri', variable: 'MONGO_URI')]) {
-                    sh '''
-                    export MONGODB_URI=$MONGO_URI
+                sh '''
+                export MONGODB_URI="mongodb+srv://vgrsoftlogic:vgr1234567@cluster0.ezxwamt.mongodb.net/Metrics?retryWrites=true&w=majority"
 
-                    docker-compose down || true
-                    docker-compose up -d --build
-                    '''
-                }
+                docker-compose down || true
+                docker-compose pull
+                docker-compose up -d
+                '''
             }
         }
     }
