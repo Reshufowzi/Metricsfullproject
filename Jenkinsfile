@@ -11,7 +11,7 @@ pipeline {
         stage('Build Docker Images') {
             steps {
                 sh '''
-                docker build -t $DOCKERHUB/mongo-api:$IMAGE_TAG ./metricmongo
+                docker build -t $DOCKERHUB/mongo-api:$IMAGE_TAG ./metriccmongo
                 docker build -t $DOCKERHUB/mysql-api:$IMAGE_TAG ./metricmysql
                 docker build -t $DOCKERHUB/frontend:$IMAGE_TAG ./metricclient
                 '''
