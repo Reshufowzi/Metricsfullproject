@@ -1,25 +1,28 @@
 const mysql2 = require("mysql2");
 
-const myshecma = mysql2.createConnection({
+const pool = mysql2.createPool({
     host: process.env.DB_HOST || "mysql",
-    user: process.env.DB_USER || "root",
-    password: process.env.DB_PASSWORD || "root",
-    port: 3306,
-    database: process.env.DB_NAME || "metrics"
+    user: process.env.DB_USER || "myuser",
+    password: process.env.DB_PASSWORD || "Root@123",
+    database: process.env.DB_NAME || "metrics",
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-// 🔥 RETRY LOGIC
-const connectWithRetry = () => {
-    myshecma.connect((err) => {
+// 🔥 TEST CONNECTION PROPERLY
+const checkConnection = () => {
+    pool.getConnection((err, conn) => {
         if (err) {
             console.log("⏳ MySQL not ready, retrying in 5 sec...");
-            setTimeout(connectWithRetry, 5000);
+            setTimeout(checkConnection, 5000);
         } else {
             console.log("✅ MySQL connected successfully!");
+            conn.release();
         }
     });
 };
 
-connectWithRetry();
+checkConnection();
 
-module.exports = myshecma;
+module.exports = pool;
