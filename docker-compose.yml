@@ -6,10 +6,26 @@ services:
     environment:
       - MONGODB_URI=${MONGODB_URI}
 
+  mysql:   # ✅ ADD THIS (database service)
+    image: mysql:8
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"
+
   mysql-api:
     image: reshma0209/mysql-api:8
     ports:
       - "8081:6000"
+    environment:   # ✅ NO HARDCODING
+      - DB_HOST=mysql
+      - DB_USER=${MYSQL_USER}
+      - DB_PASSWORD=${MYSQL_PASSWORD}
+      - DB_NAME=${MYSQL_DATABASE}
+    depends_on:
+      - mysql
 
   frontend:
     image: reshma0209/frontend:8
