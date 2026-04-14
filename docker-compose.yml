@@ -22,7 +22,7 @@ services:
   mysql-api:
     image: reshma0209/mysql-api:latest
     ports:
-      - "8081:6000"
+      - "8081:4001"
     environment:
       DB_HOST: mysql
       DB_USER: ${MYSQL_USER}
