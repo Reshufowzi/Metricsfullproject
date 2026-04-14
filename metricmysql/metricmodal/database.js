@@ -8,12 +8,18 @@ const myshecma = mysql2.createConnection({
     database: process.env.DB_NAME || "metrics"
 });
 
-myshecma.connect((err) => {
-    if (err) {
-        console.error("❌ MySQL connection failed:", err);
-    } else {
-        console.log("✅ MySQL connected successfully!");
-    }
-});
+// 🔥 RETRY LOGIC
+const connectWithRetry = () => {
+    myshecma.connect((err) => {
+        if (err) {
+            console.log("⏳ MySQL not ready, retrying in 5 sec...");
+            setTimeout(connectWithRetry, 5000);
+        } else {
+            console.log("✅ MySQL connected successfully!");
+        }
+    });
+};
+
+connectWithRetry();
 
 module.exports = myshecma;
