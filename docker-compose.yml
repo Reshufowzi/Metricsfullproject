@@ -4,7 +4,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - MONGODB_URI=${MONGODB_URI}
+      MONGODB_URI: ${MONGODB_URI}
 
   mysql:
     image: mysql:8
@@ -12,6 +12,8 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}          # ✅ IMPORTANT
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}  # ✅ IMPORTANT
     ports:
       - "3306:3306"
     volumes:
