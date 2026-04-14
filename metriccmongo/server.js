@@ -1,12 +1,12 @@
 const express = require("express");
 const cors = require("cors");
-const {default:mongoose} = require("mongoose");
+const mongoose = require("mongoose");
 const PORT = 4001;
-const Db =require("./modal/db");
-require('dotenv').config();
+const Db = require("./modal/db");
+require("dotenv").config();
 
 const app = express();
-// app.use(cors());
+
 app.use(cors({
   origin: [
     "https://metricsfullprojectclient-am6workku-vganapathirajas-projects.vercel.app"
@@ -15,51 +15,41 @@ app.use(cors({
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: false
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// mongoose.connect("mongodb://localhost:27017/Metrics",{useNewUrlParser:true,useUnifiedTopology:true})
-// mongoose.connect("mongodb://localhost:27017/Metrics")
-// mongoose.connect(process.env.Mongodb_Local_URL)
-// mongoose.connect("mongodb+srv://vgrsoftlogic:vgr1234567@cluster0.ezxwamt.mongodb.net/Metrics?appName=Cluster0")
-mongoose.connect(process.env.Mongodb_cluster_URL)
-.then(()=>{console.log("Mongod db connected")})
-.catch((err)=>{console.error("mongodb not connected",err)})
 
-app.get("/",(req,res)=>{
-    res.send("hello world,backend is ready to recive the front end datas");
-    res.end();
+// ✅ MongoDB Connection
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch((err) => console.error("❌ MongoDB not connected", err));
+
+// ✅ Test route
+app.get("/", (req, res) => {
+  res.send("hello world, backend is ready to receive the front end datas");
 });
 
-app.post("/sign",async(req,res)=>{
-    try{
-        const {semail,spass} =req.body;
-        const fd={semail,spass};
-        console.log(fd);
-        if(!semail || !spass){
-            console.log("data not coming from front end,please fill the data");
-            return res.status(400).json({Error:"client errro 404"});
-        }
-        else{
-            const dataStoredb = new Db({semail,spass});
-            await dataStoredb.save();
-            return res.status(200).json({Messages:"Data stored in db 200"});
-        }
+// ✅ API
+app.post("/sign", async (req, res) => {
+  try {
+    const { semail, spass } = req.body;
+
+    if (!semail || !spass) {
+      return res.status(400).json({ error: "Missing data" });
     }
-    catch(err){
-        if(err){
-            console.log("backend error",err);
-            return res.status(500).json({Error:"server Erro 500"});
-        }
-    }
+
+    const data = new Db({ semail, spass });
+    await data.save();
+
+    res.status(200).json({ message: "Data stored successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
-// app.listen(PORT,(err)=>{
-//     if(err){
-//         console.error("backend errro",err);
-//     }
-//     else{
-//         console.log(`server running on port ${PORT}`);
-//     }
-// })
-
-module.exports =app;
+// ✅ IMPORTANT (THIS WAS MISSING)
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
