@@ -9,7 +9,7 @@ services:
   mysql-api:
     image: reshma0209/mysql-api:8
     ports:
-      - "8080:6000"
+      - "6000:6000"
 
   frontend:
     image: reshma0209/frontend:8
