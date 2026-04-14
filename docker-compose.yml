@@ -1,8 +1,6 @@
-version: "3.8"
-
 services:
   mongo-api:
-    image: reshma0209/mongo-api:8
+    image: reshma0209/mongo-api:latest
     ports:
       - "5000:5000"
     environment:
@@ -17,10 +15,10 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - mysql_data:/var/lib/mysql   # ✅ prevent crash/restart
+      - mysql_data:/var/lib/mysql
 
   mysql-api:
-    image: reshma0209/mysql-api:14   # ✅ use updated image
+    image: reshma0209/mysql-api:latest
     ports:
       - "8081:6000"
     environment:
@@ -32,7 +30,7 @@ services:
       - mysql
 
   frontend:
-    image: reshma0209/frontend:8
+    image: reshma0209/frontend:latest
     ports:
       - "80:80"
 
