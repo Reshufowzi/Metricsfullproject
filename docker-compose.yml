@@ -2,7 +2,7 @@ services:
   mongo-api:
     image: reshma0209/mongo-api:latest
     ports:
-      - "5000:5000"
+      - "5000:4001"
     environment:
       MONGODB_URI: ${MONGODB_URI}
 
