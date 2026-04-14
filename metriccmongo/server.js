@@ -1,19 +1,21 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const PORT = 4001;
-const Db = require("./modal/db");
 require("dotenv").config();
 
-const app = express();
+const Db = require("./modal/db");
 
+const app = express();
+const PORT = 4001;
+
+// ✅ CORS FIX (allow EC2 + Vercel)
 app.use(cors({
   origin: [
+    "http://3.230.3.147",
     "https://metricsfullprojectclient-am6workku-vganapathirajas-projects.vercel.app"
   ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: false
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
 
 app.use(express.json());
@@ -24,12 +26,12 @@ mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB connected"))
   .catch((err) => console.error("❌ MongoDB not connected", err));
 
-// ✅ Test route
+// ✅ Test Route
 app.get("/", (req, res) => {
   res.send("hello world, backend is ready to receive the front end datas");
 });
 
-// ✅ API
+// ✅ API Route
 app.post("/sign", async (req, res) => {
   try {
     const { semail, spass } = req.body;
@@ -49,7 +51,7 @@ app.post("/sign", async (req, res) => {
   }
 });
 
-// ✅ IMPORTANT (THIS WAS MISSING)
+// ✅ IMPORTANT: start server
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
