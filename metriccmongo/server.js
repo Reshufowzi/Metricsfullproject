@@ -11,7 +11,7 @@ const PORT = 4001;
 // ✅ CORS FIX (allow EC2 + Vercel)
 app.use(cors({
   origin: [
-    "http://3.230.3.147",
+    "http://3.237.50.59",
     "https://metricsfullprojectclient-am6workku-vganapathirajas-projects.vercel.app"
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
@@ -32,7 +32,7 @@ app.get("/", (req, res) => {
 });
 
 // ✅ API Route
-app.post("/sign", async (req, res) => {
+app.post("/signup", async (req, res) => {
   try {
     const { semail, spass } = req.body;
 
