@@ -8,39 +8,44 @@ const Db = require("./modal/db");
 const app = express();
 const PORT = 4001;
 
-// ✅ CORS FIX (allow EC2 + Vercel)
+// ✅ CORS
 app.use(cors({
   origin: [
     "http://3.237.50.59",
     "https://metricsfullprojectclient-am6workku-vganapathirajas-projects.vercel.app"
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"]
+  methods: ["GET", "POST"],
 }));
 
+// ✅ Middleware
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
 
-// ✅ MongoDB Connection
+// ✅ MongoDB
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log("✅ MongoDB connected"))
-  .catch((err) => console.error("❌ MongoDB not connected", err));
+  .catch((err) => console.log(err));
 
-// ✅ Test Route
+// ✅ Test
 app.get("/", (req, res) => {
-  res.send("hello world, backend is ready to receive the front end datas");
+  res.send("Backend running");
 });
 
-// ✅ API Route
+// ✅ SIGNUP API (FINAL FIXED)
 app.post("/signup", async (req, res) => {
   try {
-    const { semail, spass } = req.body;
+    console.log("BODY:", req.body); // debug
 
-    if (!semail || !spass) {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
       return res.status(400).json({ error: "Missing data" });
     }
 
-    const data = new Db({ semail, spass });
+    const data = new Db({
+      semail: email,
+      spass: password
+    });
+
     await data.save();
 
     res.status(200).json({ message: "Data stored successfully" });
@@ -51,7 +56,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// ✅ IMPORTANT: start server
+// ✅ Start server
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
